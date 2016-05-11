@@ -1,20 +1,23 @@
 -- f
 f :: Float -> Float -> Float
-f x y = 2*x*y+y^2*x
+f x y = 5*y^6*x+2*y^2*x-4*x^2*y+3*x-4*(y*x^5)
 
 -- df/dx
 dx :: Float -> Float -> Float
-dx x y = y^2+2*y
+dx x y = 5*y^6 - 20*x^4*y - 8*x*y + 2*y^2 + 3
 
 -- df/dy
 dy :: Float -> Float -> Float
-dy x y = 2*x*y + 2*x
+dy x y = 30*x*y^5 - 4*x^5 - 4*x^2 + 4*x*y
 
 -- get next coordinate given the current position and a delta
 next :: Float -> Float -> Float -> (Float, Float)
 next x0 y0 delta =
-  let deltaX = ((dx x0 y0) * delta) in
-  let deltaY = ((dy x0 y0) * delta) in
+  let slopeX = dx x0 y0 in
+  let slopeY = dy x0 y0 in
+  let dynamic_delta = delta / (sqrt ( slopeX^2 + slopeY^2 )) in
+  let deltaX = (slopeX * dynamic_delta) in
+  let deltaY = (slopeY * dynamic_delta) in
   let x1 = x0 + deltaX in
   let y1 = y0 + deltaY in
   let x2 = x0 - deltaX in
